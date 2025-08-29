@@ -30,10 +30,13 @@ export const useAuth = () => {
     try {
       setLoading(true)
       
+      const redirectUrl = `${window.location.origin}/`;
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             name,
             cpf,
@@ -44,19 +47,6 @@ export const useAuth = () => {
       if (error) throw error
 
       if (data.user) {
-        // Create profile in profiles table
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            user_id: data.user.id,
-            name,
-            email,
-            cpf,
-            subscription_status: 'inactive'
-          })
-
-        if (profileError) throw profileError
-
         toast({
           title: "Conta criada com sucesso!",
           description: "Verifique seu email para confirmar a conta.",

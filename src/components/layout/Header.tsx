@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Shield, User, Menu } from "lucide-react";
+import { Shield, User, Menu, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -34,13 +36,28 @@ export const Header = () => {
           
           {/* Actions - Desktop */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
-              <User className="w-4 h-4 mr-2" />
-              Entrar
-            </Button>
-            <Button variant="premium" size="sm" onClick={() => navigate('/auth')}>
-              Criar Conta
-            </Button>
+            {user ? (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                  <User className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Button>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
+                  <User className="w-4 h-4 mr-2" />
+                  Entrar
+                </Button>
+                <Button variant="premium" size="sm" onClick={() => navigate('/auth')}>
+                  Criar Conta
+                </Button>
+              </>
+            )}
           </div>
           
           {/* Mobile menu button */}
@@ -66,13 +83,28 @@ export const Header = () => {
                 Suporte
               </a>
               <div className="flex flex-col gap-2 mt-4">
-                <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
-                  <User className="w-4 h-4 mr-2" />
-                  Entrar
-                </Button>
-                <Button variant="premium" size="sm" onClick={() => navigate('/auth')}>
-                  Criar Conta
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={signOut}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sair
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
+                      <User className="w-4 h-4 mr-2" />
+                      Entrar
+                    </Button>
+                    <Button variant="premium" size="sm" onClick={() => navigate('/auth')}>
+                      Criar Conta
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </div>
