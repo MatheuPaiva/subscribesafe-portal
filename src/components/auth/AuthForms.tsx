@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { User, Mail, Lock, Phone, CreditCard } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthFormsProps {
   mode: 'login' | 'register';
@@ -12,6 +14,8 @@ interface AuthFormsProps {
 }
 
 export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
+  const navigate = useNavigate();
+  const { signUp, signIn, resetPassword, loading } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     cpf: '',
@@ -38,10 +42,41 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
     handleInputChange('cpf', formatted);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implementar lógica de autenticação com Supabase
-    console.log('Form submitted:', formData);
+    
+    if (mode === 'register') {
+      if (formData.password !== formData.confirmPassword) {
+        return; // Toast error will be shown
+      }
+      
+      const { data, error } = await signUp(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.cpf
+      );
+      
+      if (data && !error) {
+        // Redirect to login after successful registration
+        onModeChange('login');
+      }
+    } else {
+      const { data, error } = await signIn(formData.email, formData.password);
+      
+      if (data && !error) {
+        // Redirect to dashboard after successful login
+        navigate('/dashboard');
+      }
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      return; // Show error toast
+    }
+    
+    await resetPassword(formData.email);
   };
 
   return (
@@ -143,8 +178,8 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
               </div>
             )}
             
-            <Button type="submit" variant="premium" size="lg" className="w-full">
-              {mode === 'login' ? 'Entrar' : 'Criar Conta'}
+            <Button type="submit" variant="premium" size="lg" className="w-full" disabled={loading}>
+              {loading ? 'Processando...' : (mode === 'login' ? 'Entrar' : 'Criar Conta')}
             </Button>
           </form>
           
@@ -172,7 +207,7 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
           
           {mode === 'login' && (
             <div className="text-center">
-              <Button variant="link" size="sm">
+              <Button variant="link" size="sm" onClick={handleForgotPassword}>
                 Esqueceu sua senha?
               </Button>
             </div>
