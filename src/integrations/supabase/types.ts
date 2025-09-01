@@ -21,6 +21,7 @@ export type Database = {
           email: string
           id: string
           name: string
+          role: string | null
           subscription_status: string | null
           updated_at: string
           user_id: string
@@ -31,6 +32,7 @@ export type Database = {
           email: string
           id?: string
           name: string
+          role?: string | null
           subscription_status?: string | null
           updated_at?: string
           user_id: string
@@ -41,6 +43,7 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+          role?: string | null
           subscription_status?: string | null
           updated_at?: string
           user_id?: string
@@ -52,25 +55,34 @@ export type Database = {
           created_at: string
           descricao: string
           id: string
+          respondida_em: string | null
+          resposta_admin: string | null
           status: string | null
           updated_at: string
           user_id: string
+          valor_mensalidade: number | null
         }
         Insert: {
           created_at?: string
           descricao: string
           id?: string
+          respondida_em?: string | null
+          resposta_admin?: string | null
           status?: string | null
           updated_at?: string
           user_id: string
+          valor_mensalidade?: number | null
         }
         Update: {
           created_at?: string
           descricao?: string
           id?: string
+          respondida_em?: string | null
+          resposta_admin?: string | null
           status?: string | null
           updated_at?: string
           user_id?: string
+          valor_mensalidade?: number | null
         }
         Relationships: []
       }

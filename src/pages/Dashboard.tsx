@@ -6,18 +6,37 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/client";
+import SolicitacoesAdmin from "@/components/admin/SolicitacoesAdmin";
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
   const { criarSolicitacao, loading: enviandoSolicitacao } = useSolicitacoes();
   const [descricao, setDescricao] = useState('');
+  const [userRole, setUserRole] = useState<string>('user');
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && !user) {
       navigate('/auth');
+    } else if (user) {
+      checkUserRole();
     }
   }, [user, loading, navigate]);
+
+  const checkUserRole = async () => {
+    if (!user) return;
+    
+    const { data } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+    
+    if (data?.role) {
+      setUserRole(data.role);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +60,28 @@ const Dashboard = () => {
     return null;
   }
 
+  // Se for administrador, mostra interface administrativa
+  if (userRole === 'admin') {
+    return (
+      <div className="min-h-screen bg-muted/30 p-4">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Personal Agente IA - Admin</h1>
+              <p className="text-muted-foreground">Painel Administrativo - {user.user_metadata?.name || user.email}</p>
+            </div>
+            <Button onClick={signOut} variant="outline">
+              Sair
+            </Button>
+          </div>
+
+          <SolicitacoesAdmin />
+        </div>
+      </div>
+    );
+  }
+
+  // Interface padrão do usuário
   return (
     <div className="min-h-screen bg-muted/30 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
