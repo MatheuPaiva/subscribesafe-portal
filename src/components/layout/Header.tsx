@@ -18,14 +18,11 @@ export const Header = () => {
             <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
               <Shield className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">Portal Cliente</span>
+            <span className="text-xl font-bold">Personal Agente IA</span>
           </div>
           
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#plans" className="text-muted-foreground hover:text-foreground transition-smooth">
-              Planos
-            </a>
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-smooth">
               Recursos
             </a>
@@ -73,9 +70,6 @@ export const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-4">
-              <a href="#plans" className="text-muted-foreground hover:text-foreground transition-smooth">
-                Planos
-              </a>
               <a href="#features" className="text-muted-foreground hover:text-foreground transition-smooth">
                 Recursos
               </a>

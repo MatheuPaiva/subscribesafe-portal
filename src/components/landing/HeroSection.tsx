@@ -2,10 +2,6 @@ import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-portal.jpg";
 
 export const HeroSection = () => {
-  const scrollToPlans = () => {
-    document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const handleLogin = () => {
     window.location.href = '/auth';
   };
@@ -20,12 +16,12 @@ export const HeroSection = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Portal do Cliente
-                <span className="block text-primary">Profissional</span>
+                Personal Agente IA
+                <span className="block text-primary">Sua Solução Inteligente</span>
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Acesse seu painel exclusivo, gerencie suas assinaturas e 
-                desbloqueie conteúdos premium com total segurança e praticidade.
+                Seu assistente pessoal de IA para resolver qualquer demanda. 
+                Descreva o que precisa e receba soluções personalizadas e inteligentes.
               </p>
             </div>
             
@@ -33,10 +29,10 @@ export const HeroSection = () => {
               <Button 
                 variant="hero" 
                 size="xl"
-                onClick={scrollToPlans}
+                onClick={handleLogin}
                 className="group"
               >
-                Ver Planos
+                Começar Agora
                 <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -44,9 +40,9 @@ export const HeroSection = () => {
               <Button 
                 variant="outline" 
                 size="xl"
-                onClick={handleLogin}
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Fazer Login
+                Ver Funcionalidades
               </Button>
             </div>
             
@@ -70,7 +66,7 @@ export const HeroSection = () => {
             <div className="relative z-10">
               <img 
                 src={heroImage}
-                alt="Portal do Cliente - Dashboard profissional"
+                alt="Personal Agente IA - Dashboard inteligente"
                 className="w-full h-auto rounded-2xl shadow-elevated"
               />
             </div>

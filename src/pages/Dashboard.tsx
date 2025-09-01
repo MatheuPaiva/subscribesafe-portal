@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useSolicitacoes } from "@/hooks/useSolicitacoes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
+  const { criarSolicitacao, loading: enviandoSolicitacao } = useSolicitacoes();
+  const [descricao, setDescricao] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +18,16 @@ const Dashboard = () => {
       navigate('/auth');
     }
   }, [user, loading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!descricao.trim()) return;
+
+    const result = await criarSolicitacao(descricao);
+    if (result.success) {
+      setDescricao('');
+    }
+  };
 
   if (loading) {
     return (
@@ -32,7 +46,7 @@ const Dashboard = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Portal do Cliente</h1>
+            <h1 className="text-3xl font-bold">Personal Agente IA</h1>
             <p className="text-muted-foreground">Bem-vindo, {user.user_metadata?.name || user.email}!</p>
           </div>
           <Button onClick={signOut} variant="outline">
@@ -40,17 +54,33 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Status da Assinatura</CardTitle>
-              <CardDescription>Seu plano atual</CardDescription>
+              <CardTitle>Nova Solicitação</CardTitle>
+              <CardDescription>Descreva o que você precisa que nossa IA ajude você</CardDescription>
             </CardHeader>
             <CardContent>
-              <Badge variant="secondary">Inativo</Badge>
-              <p className="text-sm text-muted-foreground mt-2">
-                Você ainda não possui uma assinatura ativa.
-              </p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="descricao">Descrição da solicitação</Label>
+                  <Textarea
+                    id="descricao"
+                    placeholder="Descreva detalhadamente o que você precisa. Exemplo: 'Preciso de um relatório de vendas mensal automatizado para minha empresa' ou 'Quero criar um sistema de gestão de tarefas para minha equipe'..."
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    className="min-h-[120px]"
+                    required
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={enviandoSolicitacao || !descricao.trim()}
+                >
+                  {enviandoSolicitacao ? 'Enviando...' : 'Enviar Solicitação'}
+                </Button>
+              </form>
             </CardContent>
           </Card>
 
@@ -72,18 +102,6 @@ const Dashboard = () => {
                 <p className="text-sm font-medium">CPF</p>
                 <p className="text-sm text-muted-foreground">{user.user_metadata?.cpf || 'Não informado'}</p>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Planos Disponíveis</CardTitle>
-              <CardDescription>Escolha seu plano</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" onClick={() => navigate('/#pricing')}>
-                Ver Planos
-              </Button>
             </CardContent>
           </Card>
         </div>
