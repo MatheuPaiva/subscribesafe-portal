@@ -19,6 +19,7 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
   const [formData, setFormData] = useState({
     name: '',
     cpf: '',
+    phone: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -37,9 +38,22 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
       .replace(/(-\d{2})\d+?$/, '$1');
   };
 
+  const formatPhone = (value: string) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{4,5})(\d{4})/, '$1-$2')
+      .replace(/(-\d{4})\d+?$/, '$1');
+  };
+
   const handleCPFChange = (value: string) => {
     const formatted = formatCPF(value);
     handleInputChange('cpf', formatted);
+  };
+
+  const handlePhoneChange = (value: string) => {
+    const formatted = formatPhone(value);
+    handleInputChange('phone', formatted);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +68,8 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
         formData.name,
         formData.email,
         formData.password,
-        formData.cpf
+        formData.cpf,
+        formData.phone
       );
       
       if (data && !error) {
@@ -125,6 +140,22 @@ export const AuthForms = ({ mode, onModeChange }: AuthFormsProps) => {
                     value={formData.cpf}
                     onChange={(e) => handleCPFChange(e.target.value)}
                     maxLength={14}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    Telefone
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="text"
+                    placeholder="(00) 00000-0000"
+                    value={formData.phone}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    maxLength={15}
                     required
                   />
                 </div>

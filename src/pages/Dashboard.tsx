@@ -143,6 +143,10 @@ const Dashboard = () => {
                 <p className="text-sm font-medium">CPF</p>
                 <p className="text-sm text-muted-foreground">{user.user_metadata?.cpf || 'Não informado'}</p>
               </div>
+              <div>
+                <p className="text-sm font-medium">Telefone</p>
+                <p className="text-sm text-muted-foreground">{user.user_metadata?.phone || 'Não informado'}</p>
+              </div>
             </CardContent>
           </Card>
         </div>

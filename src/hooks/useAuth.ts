@@ -26,7 +26,7 @@ export const useAuth = () => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (name: string, email: string, password: string, cpf: string) => {
+  const signUp = async (name: string, email: string, password: string, cpf: string, phone: string) => {
     try {
       setLoading(true)
       
@@ -40,6 +40,7 @@ export const useAuth = () => {
           data: {
             name,
             cpf,
+            phone
           }
         }
       })

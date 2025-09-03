@@ -21,6 +21,7 @@ export type Database = {
           email: string
           id: string
           name: string
+          phone: string | null
           role: string | null
           subscription_status: string | null
           updated_at: string
@@ -32,6 +33,7 @@ export type Database = {
           email: string
           id?: string
           name: string
+          phone?: string | null
           role?: string | null
           subscription_status?: string | null
           updated_at?: string
@@ -43,6 +45,7 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+          phone?: string | null
           role?: string | null
           subscription_status?: string | null
           updated_at?: string
@@ -84,7 +87,15 @@ export type Database = {
           user_id?: string
           valor_mensalidade?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_solicitacoes_user_id"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
     }
     Views: {
